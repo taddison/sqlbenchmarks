@@ -76,3 +76,16 @@ foreach($threads in $threadCounts)
         ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
     }
 }
+
+$ref = "CCS_DelayedDurability_MoreHashPartition"
+$command = "exec dbo.InsertTelemetry_MoreHashPartition_DelayedDurability $arguments"
+
+foreach($threads in $threadCounts)
+{
+    $repeats = [int]($total / $threads)
+    for($trial = 1; $trial -le $trialCount; $trial++)
+    {
+        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_HashPartition"
+        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
+    }
+}

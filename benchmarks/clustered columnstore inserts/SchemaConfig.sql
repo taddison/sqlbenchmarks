@@ -165,3 +165,54 @@ begin
 	commit tran with (delayed_durability = on);
 end
 go
+create partition function pf_morehash (tinyint)
+as range left for values (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+go
+create partition scheme ps_morehash
+as partition pf_morehash all to ([primary])
+go
+create table dbo.Telemetry_MoreHashPartition
+(
+	TelemetryId uniqueidentifier not null
+	,StatusId int not null
+	,DeviceId bigint not null
+	,LocationId int not null
+	,Payload varchar(400) not null
+	,InsertDate datetime2(3) not null default getutcdate()
+	,HashId tinyint not null
+) on ps_morehash(HashId)
+go
+create clustered columnstore index CCS_MoreHashPartition on dbo.Telemetry_MoreHashPartition on ps_morehash(HashId)
+go
+create or alter procedure dbo.InsertTelemetry_MoreHashPartition_DelayedDurability
+	@telemetryId uniqueidentifier
+	,@statusId int
+	,@deviceId bigint
+	,@locationId int
+	,@payload varchar(400)
+as
+begin
+	set xact_abort on;
+	set nocount on;
+	begin tran;
+	insert into dbo.Telemetry_MoreHashPartition
+	(
+		TelemetryId
+		,StatusId
+		,DeviceId
+		,LocationId
+		,Payload
+		,HashId
+	)
+	values
+	(
+		@telemetryId
+		,@statusId
+		,@deviceId
+		,@locationId
+		,@payload
+		,cast(abs(convert(bigint,convert(varbinary, newid()))) % 20 as tinyint)
+	);
+	commit tran with (delayed_durability = on);
+end
+go
