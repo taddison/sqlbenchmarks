@@ -10,7 +10,7 @@ $guid = [System.Guid]::NewGuid()
 $payload = '{ "trackingData" : { "lat": "68.643525", "long" : "-95.9754966" } }'
 $arguments = "@telemetryId = '$guid', @statusId = 1, @deviceId = 1, @locationId = 1, @payload = '$payload'"
 
-$threadCounts = @(512,256,128,64,32,16,8,4,2,1)
+$threadCounts = @(64,32,16,8,4,2,1)
 $total = 1000000
 $trialCount = 3
 
@@ -47,6 +47,32 @@ foreach($threads in $threadCounts)
     for($trial = 1; $trial -le $trialCount; $trial++)
     {
         Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry"
+        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
+    }
+}
+
+$ref = "CCS_DelayedDurability_FourFiles"
+$command = "exec dbo.InsertTelemetry_FourFiles_DelayedDurability $arguments"
+
+foreach($threads in $threadCounts)
+{
+    $repeats = [int]($total / $threads)
+    for($trial = 1; $trial -le $trialCount; $trial++)
+    {
+        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_FourFiles"
+        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
+    }
+}
+
+$ref = "CCS_DelayedDurability_HashPartition"
+$command = "exec dbo.InsertTelemetry_HashPartition_DelayedDurability $arguments"
+
+foreach($threads in $threadCounts)
+{
+    $repeats = [int]($total / $threads)
+    for($trial = 1; $trial -le $trialCount; $trial++)
+    {
+        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_HashPartition"
         ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
     }
 }
