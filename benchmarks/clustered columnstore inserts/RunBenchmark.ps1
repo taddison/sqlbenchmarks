@@ -4,13 +4,13 @@ $server = "localhost"
 $database = "LoadTest"
 $user = "loadtest"
 $pass = "S3c|_|re"
-$connectionString = "server=$server;initial catalog=$database;user id=$user;password=$pass;"
+$connectionString = "server=$server;initial catalog=$database;user id=$user;password=$pass;max pool size=2000"
 
 $guid = [System.Guid]::NewGuid()
 $payload = '{ "trackingData" : { "lat": "68.643525", "long" : "-95.9754966" } }'
 $arguments = "@telemetryId = '$guid', @statusId = 1, @deviceId = 1, @locationId = 1, @payload = '$payload'"
 
-$threadCounts = @(1,2,4,8,16,32,64,128)
+$threadCounts = @(128,64,32,16,8,4,2,1)
 $total = 1000000
 $trialCount = 3
 
