@@ -10,7 +10,7 @@ $guid = [System.Guid]::NewGuid()
 $payload = '{ "trackingData" : { "lat": "68.643525", "long" : "-95.9754966" } }'
 $arguments = "@telemetryId = '$guid', @statusId = 1, @deviceId = 1, @locationId = 1, @payload = '$payload'"
 
-$threadCounts = @(128,64,32,16,8,4,2,1)
+$threadCounts = @(512,256,128,64,32,16,8,4,2,1)
 $total = 1000000
 $trialCount = 3
 
