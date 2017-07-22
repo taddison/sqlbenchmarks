@@ -33,8 +33,8 @@ foreach($threads in $threadCounts)
     $repeats = [int]($total / $threads)
     for($trial = 1; $trial -le $trialCount; $trial++)
     {
-        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
         Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry"
+        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
     }
 }
 
@@ -46,7 +46,7 @@ foreach($threads in $threadCounts)
     $repeats = [int]($total / $threads)
     for($trial = 1; $trial -le $trialCount; $trial++)
     {
-        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
         Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry"
+        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
     }
 }
