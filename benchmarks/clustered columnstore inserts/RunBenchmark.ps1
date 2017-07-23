@@ -70,35 +70,15 @@ $command = "exec dbo.InsertTelemetry_HashPartition_DelayedDurability $arguments"
 foreach($threads in $threadCounts)
 {
     $repeats = [int]($total / $threads)
-    for($trial = 1; $trial -le $trialCount; $trial++)
+    # Repeat each thread/trial on 1..4 partitions
+    for($partitions = 1; $partitions -le 4; $partitions++)
     {
-        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_HashPartition"
-        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
-    }
-}
-
-$ref = "CCS_DelayedDurability_MoreHashPartition"
-$command = "exec dbo.InsertTelemetry_MoreHashPartition_DelayedDurability $arguments"
-
-foreach($threads in $threadCounts)
-{
-    $repeats = [int]($total / $threads)
-    for($trial = 1; $trial -le $trialCount; $trial++)
-    {
-        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_MoreHashPartition"
-        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
-    }
-}
-
-$ref = "CCS_DelayedDurability_LessHashPartition"
-$command = "exec dbo.InsertTelemetry_LessHashPartition_DelayedDurability $arguments"
-
-foreach($threads in $threadCounts)
-{
-    $repeats = [int]($total / $threads)
-    for($trial = 1; $trial -le $trialCount; $trial++)
-    {
-        Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_LessHashPartition"
-        ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $command -m -i $ref *>> results.csv
+        $partitionCommand = $command + "_$partitions"
+        $partitionRef = $ref + "_$partitions"
+        for($trial = 1; $trial -le $trialCount; $trial++)
+        {
+            Invoke-Sqlcmd -ServerInstance $server -Database $database -Username $user -Password $pass -Query "truncate table dbo.Telemetry_HashPartition"
+            ..\..\tools\SQLDriver.exe -r $repeats -t $threads -c $connectionString -s $partitionCommand -m -i $partitionRef *>> results.csv
+        }
     }
 }
