@@ -131,7 +131,7 @@ create table dbo.Telemetry_HashPartition
 	,HashId tinyint not null
 ) on ps_hash(HashId)
 go
-create clustered columnstore index CCS_MoreHashPartition on dbo.Telemetry_MoreHashPartition on ps_hash(HashId)
+create clustered columnstore index CCS_HashPartition on dbo.Telemetry_HashPartition on ps_hash(HashId)
 go
 create or alter procedure dbo.InsertTelemetry_HashPartition_DelayedDurability_1
 	@telemetryId uniqueidentifier
