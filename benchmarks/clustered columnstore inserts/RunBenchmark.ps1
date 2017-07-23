@@ -73,7 +73,7 @@ foreach($threads in $threadCounts)
     # Repeat each thread/trial on 1..4 partitions
     for($partitions = 1; $partitions -le 4; $partitions++)
     {
-        $partitionCommand = $command + "_$partitions"
+        $partitionCommand = "exec dbo.InsertTelemetry_HashPartition_DelayedDurability_$partitions $arguments"
         $partitionRef = $ref + "_$partitions"
         for($trial = 1; $trial -le $trialCount; $trial++)
         {
