@@ -23,3 +23,12 @@ CCS_DelayedDurability_HashPartition_P7,16,62500,49429,1000000,0,0,0,1,5,11,77
 CCS_DelayedDurability_HashPartition_P8,16,62500,52899,1000000,0,0,0,1,5,11,35
 CCS_DelayedDurability_HashPartition_P8,16,62500,44273,1000000,0,0,0,0,1,8,53
 CCS_DelayedDurability_HashPartition_P8,16,62500,38874,1000000,0,0,0,0,1,7,31
+SelectServername,4,250000,109738,1000000,0,0,0,0,1,7,17
+SelectServername,8,125000,44608,1000000,0,0,0,0,1,7,19
+SelectServername,16,62500,37761,1000000,0,0,0,1,5,10,23
+SelectServername,32,31250,35449,1000000,0,0,0,0,1,7,20
+SelectServername,64,15625,30812,1000000,0,0,0,0,1,6,149
+SelectServername,128,7812,27595,999936,0,0,0,0,0,4,15
+SelectServername,256,3906,32306,999936,0,0,0,1,5,10,33
+SelectServername,512,1953,34730,999936,0,0,0,0,1,5,40
+SelectServername,1024,977,24994,1000448,0,0,0,0,0,4,14
